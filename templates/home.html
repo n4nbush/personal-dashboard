@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Aplicaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📦 Mis Aplicaciones</h1>
+            <p class="subtitle">Selecciona una aplicación para comenzar</p>
+        </header>
+
+        <div class="app-grid">
+            <!-- Tarjeta: Gestor de Gastos -->
+            <a href="{{ url_for('gastos.gastos') }}" class="app-card gastos">
+                <div class="app-icon">💰</div>
+                <h2>Gestor de Gastos</h2>
+                <p>Controla tus finanzas personales</p>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- Tarjeta: To-Do List -->
+            <a href="{{ url_for('todo.index') }}" class="app-card todo">
+                <div class="app-icon">✓</div>
+                <h2>To-Do List</h2>
+                <p>Organiza tus tareas diarias</p>
+                <span class="arrow">→</span>
+            </a>
+
+            <!-- Tarjeta placeholder para futuras apps -->
+            <div class="app-card placeholder">
+                <div class="app-icon">➕</div>
+                <h2>Próximamente</h2>
+                <p>Más aplicaciones en camino</p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Desarrollado por <strong>n4nbush</strong></p>
+        </footer>
+    </div>
+</body>
+</html>

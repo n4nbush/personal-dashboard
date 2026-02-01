@@ -1,0 +1,42 @@
+{% extends 'base_layout.html' %}
+{%block categoria%}"grupos"{%endblock%}
+{%block titulo%}Movimientos{%endblock%}
+
+{%  block body %}
+
+<div>
+  <h1>Totales</h1>
+  <table>
+    
+    <tr>
+      <td>Gastos: </td>
+      <td class="monto" data-valor="{{total.get("Total general")}}"></td>
+    </tr>
+    <tr>
+      <td>Ingresos:</td>
+      <td class="monto" data-valor="{{total.get("Ingresos")}}"></td>
+    </tr>
+    <tr>
+      <td>Diferencia: </td>
+      <td class="monto" data-valor="{{total.get("Ingresos")-total.get("Total general")}}"></td>
+    </tr>
+    </table>
+</div>
+<h1>Resumen por grupos</h1>
+  <table>
+    <thead>
+        <tr>
+            <th>Nombre grupo</th>
+            <th>Monto</th>
+        </tr>
+      </thead>
+      {%for grupo in grupos%}
+  <tr>
+      <td>{{grupo}}</td>
+      <td class="monto" data-valor="{{total.get(grupo)}}"></td>
+    </tr>
+    {%endfor%}
+
+
+
+{% endblock %}

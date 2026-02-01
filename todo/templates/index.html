@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('todo.static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Mi Lista de Tareas</h1>
+        
+        <!-- FILTROS -->
+        <div class="filter-container">
+            <div class="filter-group">
+                <label for="categoria">Categoría:</label>
+                <select id="categoria" name="categoria" onchange="filtrarTareas()">
+                    <option value="todas">📂 Todas las categorías</option>
+                    <option value="general">📋 General</option>
+                    <option value="peliculas">🎬 Películas</option>
+                    <option value="anime">🎌 Anime</option>
+                    <option value="moto">🏍️ Moto</option>
+                    <option value="auto">🚗 Auto</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="estado">Estado:</label>
+                <select id="estado" name="estado" onchange="filtrarTareas()">
+                    <option value="todas">📊 Todas</option>
+                    <option value="pendientes">⏳ Pendientes</option>
+                    <option value="completadas">✅ Completadas</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- FORMULARIO AGREGAR TAREA -->
+        <form action="/todo/agregar_tarea" method="POST" class="task-form">
+            <label for="tarea">Nueva tarea:</label>
+            <input type="text" id="tarea" name="tarea" placeholder="Escribe tu tarea..." required>
+            
+            <select id="nueva_categoria" name="categoria" required>
+                <option value="">Categoría...</option>
+                <option value="general" selected>📋 General</option>
+                <option value="peliculas">🎬 Películas</option>
+                <option value="anime">🎌 Anime</option>
+                <option value="moto">🏍️ Moto</option>
+                <option value="auto">🚗 Auto</option>
+            </select>
+            
+            <button type="submit">➕ Agregar</button>
+
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>📅 Fecha</th>
+                    <th>📋 Tarea</th>
+                    <th>🏷️ Categoría</th>
+                    <th>✓ Estado</th>
+                    <th>⚙️ Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarea in tareas %}
+                <tr data-categoria="{{ tarea[3] }}" data-estado="{{ 'completada' if tarea[2] else 'pendiente' }}">
+                    <td>{{ tarea[1] }}</td>
+                    <td>{{ tarea[2] }}</td>
+                    <td><span class="categoria-badge categoria-{{ tarea[3] }}">{{ tarea[3]|title }}</span></td>
+                    <td>
+                        {% if tarea[4] == 1 %}
+                            <span class="estado-completada" data-estado="completada">✓ Completada</span>
+                        {% else %}
+                            <span class="estado-pendiente" data-estado="pendiente">⏳ Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="actions-container">
+                            <form action="/todo/completar" method="post">
+                                <input type="hidden" name="id" value="{{tarea[0]}}">
+                                <button type="submit" class="btn-action btn-complete">✓</button>
+                            </form>
+                            <form action="/todo/borrar" method="post">
+                                <input type="hidden" name="id" value="{{tarea[0]}}">
+                                <button type="submit" class="btn-action btn-delete">🗑️</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function filtrarTareas() {
+            const categoriaSeleccionada = document.getElementById('categoria').value;
+            const estadoSeleccionado = document.getElementById('estado').value;
+            const filas = document.querySelectorAll('tbody tr');
+            
+            filas.forEach(fila => {
+                const categoria = fila.dataset.categoria;
+                const estado = fila.dataset.estado;
+                
+                let mostrarCategoria = categoriaSeleccionada === 'todas' || categoria === categoriaSeleccionada;
+                let mostrarEstado = estadoSeleccionado === 'todas' || 
+                                   (estadoSeleccionado === 'pendientes' && estado === 'pendiente') ||
+                                   (estadoSeleccionado === 'completadas' && estado === 'completada');
+                
+                if (mostrarCategoria && mostrarEstado) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
