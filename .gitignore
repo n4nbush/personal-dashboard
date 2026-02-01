@@ -7,3 +7,6 @@ database/
 backup/
 database.db
 database/database.db
+.env
+*.db
+backup*.db
