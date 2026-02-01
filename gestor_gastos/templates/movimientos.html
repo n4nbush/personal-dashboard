@@ -1,95 +1,110 @@
 {% extends 'base_layout.html' %}
 {%block categoria%}"movimientos"{%endblock%}
 {%block titulo%}Movimientos{%endblock%}
+{%block header_title%}📋 Mis Movimientos{%endblock%}
 
 {%  block body %}
-<table>
-    <thead>
-        <tr>
-            <th>Fecha</th>
-            <th>Categoria</th>
-            <th>Monto</th>
-            <th>Ver mas</th>
-        </tr>
-    </thead>
-<body>
-  <main>
-    
-    
-    
-    <div id="filtros_avanzados" class="oculto">
-      <form class="form" method="post" style="display: inline;">
-        <label for="miListaDesplegable">Selecciona un periodo:</label>
-        <select name="filtro_fecha" id="filtro_fecha">
-          <option value="30" selected>Seleccione un periodo</option>
-          <option value="1">Dia</option>
-          <option value="7">Semana</option>
-          <option value="30">Mes</option>
-          <option value="60">60 dias</option>
-          <option value="360">Año</option>
-        </select>
-        <label for="miListaDesplegable">Selecciona un grupo:</label>
-        <select name="grupo">
-          {%for grupo in grupos%}
-            <option value="{{grupo}}">{{grupo}}</option>
-          {%endfor%}
-            <option value="" selected>Seleccione un grupo</option>
-        </select> 
-        <label for="miListaDesplegable">Selecciona una categoria:</label>
-        <select name="categoria">
-            {% for categoria in categorias %}
-              <option  value="{{categoria}}">{{categoria}}</option>
-            {%endfor%}
-            <option value="" selected>Seleccione una categoria</option>
-          </select>
-          <button type="submit" style="width: 20%;">Filtrar</button>
-      </form>
-    </div>
-    <button onclick="toggleFiltros()" id="boton_filtros_avanzados">Filtros Avanzado▼</button>
 
-    {% for resultado in resultados %}   
-      <tr>
-            <td>{{ resultado[1][:10] }}</td>
-            <td>{{resultado[4]}}</td>
-            <td class="monto" data-valor="{{ (resultado[6]) }}"></td>
-            <td>
-            <button onclick="document.getElementById('{{resultado[0]}}').classList.toggle('oculto')">ℹ️</button>
-            </td>
-            
-    </tr>
-    <tr class="oculto" id="{{resultado[0]}}">
-      <td colspan="5">
-        <div style="padding: 15px; background-color: #e9ecef;">
-          <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; align-items: center;">
-            <span style="font-weight: bold;">Tipo:</span>
-            <span>{{resultado[2]}}</span>
+    <!-- Filtros -->
+    <button onclick="toggleFiltros()" id="boton_filtros_avanzados" class="btn-toggle-filters">
+        🔍 Filtros Avanzados ▼
+    </button>
 
-            <span style="font-weight: bold;">Método de pago:</span>
-            <span>{{resultado[3]}}</span>
-
-            <span style="font-weight: bold;">Grupo:</span>
-            <span>{{resultado[5]}}</span>
+    <div id="filtros_avanzados" class="filters-container oculto">
+        <form method="post" class="filters-form">
             
-            <span style="font-weight: bold;">Descripción:</span>
-            <span>{{resultado[7]}}</span>
-            
-            <div style="grid-column: 1 / -1; margin-top: 10px;">
-              <form action="/borrar" method="post">
-                <input type="hidden" name="id" value="{{resultado[0]}}">
-                <button type="submit">Borrar</button>
-              </form>
+            <div class="form-group">
+                <label for="filtro_fecha">📅 Periodo</label>
+                <select name="filtro_fecha" id="filtro_fecha">
+                    <option value="30" selected>Seleccione un periodo</option>
+                    <option value="1">📆 Día</option>
+                    <option value="7">📅 Semana</option>
+                    <option value="30">📆 Mes</option>
+                    <option value="60">📅 60 días</option>
+                    <option value="360">📆 Año</option>
+                </select>
             </div>
-          </div>
+
+            <div class="form-group">
+                <label for="grupo">🏷️ Grupo</label>
+                <select name="grupo">
+                    <option value="" selected>Todos los grupos</option>
+                    {%for grupo in grupos%}
+                        <option value="{{grupo}}">{{grupo}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="categoria">📂 Categoría</label>
+                <select name="categoria">
+                    <option value="" selected>Todas las categorías</option>
+                    {% for categoria in categorias %}
+                        <option value="{{categoria}}">{{categoria}}</option>
+                    {%endfor%}
+                </select>
+            </div>
+
+            <button type="submit" class="btn-filter">🔍 Aplicar Filtros</button>
+        </form>
+    </div>
+
+    <!-- Lista de movimientos (Mobile-First: Cards) -->
+    <div class="movements-list">
+        {% for resultado in resultados %}
+        <div class="movement-card">
+            <!-- Header de la card -->
+            <div class="movement-header">
+                <span class="movement-date">📅 {{ resultado[1][:10] }}</span>
+                <span class="category-badge">{{resultado[4]}}</span>
+            </div>
+
+            <!-- Monto principal -->
+            <div class="movement-amount">
+                <span class="monto" data-valor="{{ resultado[6] }}"></span>
+            </div>
+
+            <!-- Botón ver más -->
+            <button 
+                onclick="document.getElementById('detail-{{resultado[0]}}').classList.toggle('oculto')" 
+                class="btn-toggle-detail">
+                ℹ️ Ver detalles
+            </button>
+
+            <!-- Detalles expandibles -->
+            <div class="movement-details oculto" id="detail-{{resultado[0]}}">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">💵 Tipo:</span>
+                        <span class="detail-value">{{resultado[2]}}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">💳 Método:</span>
+                        <span class="detail-value">{{resultado[3]}}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">🏷️ Grupo:</span>
+                        <span class="detail-value">{{resultado[5]}}</span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <span class="detail-label">📝 Descripción:</span>
+                        <span class="detail-value">{{resultado[7] or 'Sin descripción'}}</span>
+                    </div>
+                </div>
+
+                <form action="/gs/borrar" method="post" class="delete-form">
+                    <input type="hidden" name="id" value="{{resultado[0]}}">
+                    <button type="submit" class="btn-delete">🗑️ Eliminar</button>
+                </form>
+            </div>
         </div>
-      </td>
-    </tr>
+        {% endfor %}
+    </div>
 
-    {% endfor %}
-    <tfoot>
-      <tr>
-        <td colspan="2">Total</td>
-        <td>${{ total.get("Total general") }}</td>
-      </tr>
-    </tfoot>
+    <!-- Total -->
+    <div class="total-card">
+        <span class="total-label">💰 Total:</span>
+        <span class="total-amount monto" data-valor="${{ total.get('Total general') }}"></span>
+    </div>
 
-    {% endblock %}
+{% endblock %}

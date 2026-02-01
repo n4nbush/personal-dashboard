@@ -1,57 +1,72 @@
 {% extends 'base_layout.html' %}
 {%block categoria%}"gastos"{%endblock%}
 {%block titulo%}Registrar gasto{%endblock%}
+{%block header_title%}💰 Registrar Movimiento{%endblock%}
+
 {%  block body %}
 
-    <h1>💰 Registrar Movimiento</h1>
-
+    <!-- Mensajes flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert {{ category }}">{{ message }}</div>
-            {% endfor %}
+            <div class="alerts-container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <span class="alert-icon">{% if category == 'success' %}✅{% else %}❌{% endif %}</span>
+                        <span class="alert-message">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
     {% endwith %}
 
-    <form action="/gs/registrar" method="POST">
-
+    <!-- Formulario de registro -->
+    <form action="/gs/registrar" method="POST" class="expense-form">
+        
         <div class="form-group">
-            <label for="fecha_hora">Fecha y Hora:</label>
+            <label for="fecha_hora">📅 Fecha y Hora</label>
             <input type="datetime-local" id="fecha_hora" name="fecha_hora" required>
         </div>
 
-        <div class="form-group">
-            <label for="tipo">Tipo:</label>
-            <select id="tipo" name="tipo" required>
-                <option value="Gasto" selected>Gasto</option>
-                <option value="Ingreso">Ingreso</option>
-            </select>
+        <div class="form-row-2">
+            <div class="form-group">
+                <label for="tipo">💵 Tipo</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="Gasto" selected>💸 Gasto</option>
+                    <option value="Ingreso">💰 Ingreso</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="metodo_pago">💳 Método de pago</label>
+                <select name="metodo_pago" id="metodo_pago">
+                    <option value="Debito" selected>💳 Débito</option>
+                    <option value="Tarjeta">💳 Tarjeta</option>
+                </select>
+            </div>
         </div>
+
         <div class="form-group">
-            <label for="metodo_pago">Metodo de pago</label>
-            <select name="metodo_pago" id="metodo_pago">
-                <option value="Debito" selected>Debito</option>
-                <option value="Tarjeta">Tarjeta</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="motivo">Motivo:</label>
+            <label for="motivo">🏷️ Categoría</label>
             <select id="motivo" name="motivo" required>
-                <option value="">Selecciona un motivo</option>
-            <!-- Las opciones se llenan con JavaScript -->
+                <option value="">Selecciona una categoría...</option>
+                <!-- Las opciones se llenan con JavaScript -->
             </select>
         </div>
 
         <div class="form-group">
-            <label for="monto">Monto:</label>
-            <input type="number" step="0.01" id="monto" name="monto" placeholder="0.00" required>
+            <label for="monto">💵 Monto</label>
+            <div class="input-group">
+                <span class="input-prefix">$</span>
+                <input type="number" step="0.01" id="monto" name="monto" placeholder="0.00" required>
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="descripcion">Descripción (opcional):</label>
+            <label for="descripcion">📝 Descripción (opcional)</label>
             <textarea id="descripcion" name="descripcion" rows="3" placeholder="Detalles adicionales..."></textarea>
         </div>
 
-        <button type="submit">💾 Guardar Movimiento</button>
+        <button type="submit" class="btn-submit">💾 Guardar Movimiento</button>
     </form>
+
 {%endblock%}

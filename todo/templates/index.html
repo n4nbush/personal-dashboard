@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +8,19 @@
 </head>
 <body>
     <div class="container">
-        <h1>📝 Mi Lista de Tareas</h1>
+        <!-- Header -->
+        <header class="header">
+            <a href="/" class="btn-home">🏠</a>
+            <h1>📝 Mis Tareas</h1>
+            <div class="spacer"></div>
+        </header>
         
         <!-- FILTROS -->
         <div class="filter-container">
             <div class="filter-group">
-                <label for="categoria">Categoría:</label>
+                <label for="categoria">📂 Categoría:</label>
                 <select id="categoria" name="categoria" onchange="filtrarTareas()">
-                    <option value="todas">📂 Todas las categorías</option>
+                    <option value="todas">Todas</option>
                     <option value="general">📋 General</option>
                     <option value="peliculas">🎬 Películas</option>
                     <option value="anime">🎌 Anime</option>
@@ -25,9 +30,9 @@
             </div>
             
             <div class="filter-group">
-                <label for="estado">Estado:</label>
+                <label for="estado">📊 Estado:</label>
                 <select id="estado" name="estado" onchange="filtrarTareas()">
-                    <option value="todas">📊 Todas</option>
+                    <option value="todas">Todas</option>
                     <option value="pendientes">⏳ Pendientes</option>
                     <option value="completadas">✅ Completadas</option>
                 </select>
@@ -36,71 +41,81 @@
         
         <!-- FORMULARIO AGREGAR TAREA -->
         <form action="/todo/agregar_tarea" method="POST" class="task-form">
-            <label for="tarea">Nueva tarea:</label>
-            <input type="text" id="tarea" name="tarea" placeholder="Escribe tu tarea..." required>
+            <input type="text" id="tarea" name="tarea" placeholder="✍️ Nueva tarea..." required>
             
-            <select id="nueva_categoria" name="categoria" required>
-                <option value="">Categoría...</option>
-                <option value="general" selected>📋 General</option>
-                <option value="peliculas">🎬 Películas</option>
-                <option value="anime">🎌 Anime</option>
-                <option value="moto">🏍️ Moto</option>
-                <option value="auto">🚗 Auto</option>
-            </select>
-            
-            <button type="submit">➕ Agregar</button>
-
+            <div class="form-row">
+                <select id="nueva_categoria" name="categoria" required>
+                    <option value="">Categoría...</option>
+                    <option value="general" selected>📋 General</option>
+                    <option value="peliculas">🎬 Películas</option>
+                    <option value="anime">🎌 Anime</option>
+                    <option value="moto">🏍️ Moto</option>
+                    <option value="auto">🚗 Auto</option>
+                </select>
+                
+                <button type="submit">➕ Agregar</button>
+            </div>
         </form>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>📅 Fecha</th>
-                    <th>📋 Tarea</th>
-                    <th>🏷️ Categoría</th>
-                    <th>✓ Estado</th>
-                    <th>⚙️ Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tarea in tareas %}
-                <tr data-categoria="{{ tarea[3] }}" data-estado="{{ 'completada' if tarea[2] else 'pendiente' }}">
-                    <td>{{ tarea[1] }}</td>
-                    <td>{{ tarea[2] }}</td>
-                    <td><span class="categoria-badge categoria-{{ tarea[3] }}">{{ tarea[3]|title }}</span></td>
-                    <td>
+        <!-- LISTA DE TAREAS (Cards para móvil, tabla para desktop) -->
+        <div class="tasks-list">
+            {% for tarea in tareas %}
+            <div class="task-card" data-categoria="{{ tarea[3] }}" data-estado="{{ 'completada' if tarea[4] == 1 else 'pendiente' }}">
+                <!-- Header de la card -->
+                <div class="task-header">
+                    <span class="categoria-badge categoria-{{ tarea[3] }}">{{ tarea[3]|title }}</span>
+                    <span class="task-date">📅 {{ tarea[1] }}</span>
+                </div>
+                
+                <!-- Contenido de la tarea -->
+                <div class="task-content">
+                    <p class="task-text {% if tarea[4] == 1 %}completed{% endif %}">{{ tarea[2] }}</p>
+                </div>
+                
+                <!-- Footer con estado y acciones -->
+                <div class="task-footer">
+                    <div class="task-status">
                         {% if tarea[4] == 1 %}
-                            <span class="estado-completada" data-estado="completada">✓ Completada</span>
+                            <span class="status-badge status-completed">✅ Completada</span>
                         {% else %}
-                            <span class="estado-pendiente" data-estado="pendiente">⏳ Pendiente</span>
+                            <span class="status-badge status-pending">⏳ Pendiente</span>
                         {% endif %}
-                    </td>
-                    <td>
-                        <div class="actions-container">
-                            <form action="/todo/completar" method="post">
-                                <input type="hidden" name="id" value="{{tarea[0]}}">
-                                <button type="submit" class="btn-action btn-complete">✓</button>
-                            </form>
-                            <form action="/todo/borrar" method="post">
-                                <input type="hidden" name="id" value="{{tarea[0]}}">
-                                <button type="submit" class="btn-action btn-delete">🗑️</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </div>
+                    
+                    <div class="task-actions">
+                        {% if tarea[4] != 1 %}
+                        <form action="/todo/completar" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="{{tarea[0]}}">
+                            <button type="submit" class="btn-action btn-complete" title="Completar">✓</button>
+                        </form>
+                        {% endif %}
+                        <form action="/todo/borrar" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="{{tarea[0]}}">
+                            <button type="submit" class="btn-action btn-delete" title="Eliminar">🗑️</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Mensaje si no hay tareas -->
+        {% if tareas|length == 0 %}
+        <div class="empty-state">
+            <p>🎉 No hay tareas. ¡Empieza agregando una!</p>
+        </div>
+        {% endif %}
     </div>
+    
     <script>
         function filtrarTareas() {
             const categoriaSeleccionada = document.getElementById('categoria').value;
             const estadoSeleccionado = document.getElementById('estado').value;
-            const filas = document.querySelectorAll('tbody tr');
+            const cards = document.querySelectorAll('.task-card');
             
-            filas.forEach(fila => {
-                const categoria = fila.dataset.categoria;
-                const estado = fila.dataset.estado;
+            cards.forEach(card => {
+                const categoria = card.dataset.categoria;
+                const estado = card.dataset.estado;
                 
                 let mostrarCategoria = categoriaSeleccionada === 'todas' || categoria === categoriaSeleccionada;
                 let mostrarEstado = estadoSeleccionado === 'todas' || 
@@ -108,9 +123,9 @@
                                    (estadoSeleccionado === 'completadas' && estado === 'completada');
                 
                 if (mostrarCategoria && mostrarEstado) {
-                    fila.style.display = '';
+                    card.style.display = 'block';
                 } else {
-                    fila.style.display = 'none';
+                    card.style.display = 'none';
                 }
             });
         }
