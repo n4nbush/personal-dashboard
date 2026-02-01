@@ -1,59 +1,112 @@
-# Personal-Dashboard
+# Personal Dashboard 🎯
 
-## Descripción
+Dashboard web modular para gestión personal desarrollado con Flask. Consolida múltiples aplicaciones en un único servidor usando arquitectura de Blueprints.
 
-Gestor de Gestores es una aplicación web desarrollada en Python utilizando el framework Flask. Esta aplicación está diseñada para ayudar a los usuarios a gestionar sus gastos y tareas diarias de manera eficiente. Aunque se puede utilizar como un portafolio, su funcionalidad principal se centra en la gestión de finanzas y tareas, lo que la convierte en una herramienta útil para el día a día.
+## 🚀 Características
 
-## Características
+### 💰 Gestor de Gastos
+- Registro de ingresos y gastos
+- Categorización y filtros
+- Historial detallado
+- Respaldos automáticos
 
-- **Gestión de Gastos**: Permite a los usuarios registrar y categorizar sus gastos, facilitando el seguimiento de sus finanzas.
-- **Gestión de Tareas**: Los usuarios pueden agregar, eliminar y marcar tareas como completadas.
-- **Interfaz Intuitiva**: La aplicación cuenta con una interfaz de usuario amigable que facilita la navegación y el uso.
-- **Base de Datos**: Utiliza SQLite para almacenar datos de manera eficiente y segura.
+### ✅ To-Do List
+- Gestión de tareas
+- Estados (pendiente/completada)
+- Interfaz intuitiva
 
-## Instalación
+## 🛠️ Stack Tecnológico
 
-Para instalar y ejecutar la aplicación, sigue estos pasos:
+- **Backend**: Python 3.9+ | Flask 3.1.2
+- **Base de Datos**: SQLite
+- **Frontend**: HTML5 | CSS3 | JavaScript vanilla
+- **Deployment**: PythonAnywhere
 
-1. **Clona el repositorio**:
-   ```bash
-   git clone <URL_DEL_REPOSITORIO>
-   cd personal-dashboard
-   ```
+## 📂 Estructura del Proyecto
 
-2. **Crea un entorno virtual** (opcional pero recomendado):
-   ```bash
-   python3 -m venv env
-   source env/bin/activate  # En Linux
-   ```
+```
+personal-dashboard/
+├── app.py                  # Aplicación principal
+├── config.py               # Configuraciones
+├── gestor_gastos/          # Blueprint gestor de gastos
+│   ├── routes.py
+│   ├── funciones.py
+│   ├── templates/
+│   └── static/
+├── todo/                   # Blueprint to-do list
+│   ├── routes.py
+│   ├── funciones.py
+│   ├── templates/
+│   └── static/
+└── templates/              # Templates compartidos
+```
 
-3. **Instala las dependencias**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## 🔧 Instalación
 
-4. **Ejecuta la aplicación**:
-   ```bash
-   python3 app.py
-   ```
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/n4nbush/personal-dashboard.git
+cd personal-dashboard
+```
 
-5. **Accede a la aplicación**: Abre tu navegador y ve a `http://127.0.0.1:5000`.
+### 2. Crear entorno virtual
+```bash
+python3 -m venv env
+source env/bin/activate  # Linux/Mac
+# o
+env\Scripts\activate  # Windows
+```
 
-## Uso
+### 3. Instalar dependencias
+```bash
+pip install -r requirements.txt
+```
 
-- **Página Principal**: Al acceder a la aplicación, serás recibido en la página principal donde podrás navegar a las secciones de gastos y tareas.
-- **Registrar Gastos**: Dirígete a la sección de gastos para agregar nuevos gastos y ver un resumen de tus finanzas.
-- **Gestionar Tareas**: En la sección de tareas, puedes agregar nuevas tareas, marcarlas como completadas o eliminarlas.
+### 4. Configurar variables de entorno
+```bash
+# Crear archivo .env
+echo "SECRET_KEY=$(python -c 'import secrets; print(secrets.token_hex(32))')" > .env
+```
 
-## Contribuciones
+### 5. Crear estructura de carpetas
+```bash
+mkdir -p database backup
+```
 
-Las contribuciones son bienvenidas. Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+### 6. Ejecutar la aplicación
+```bash
+python app.py
+```
 
-1. Haz un fork del repositorio.
-2. Crea una nueva rama (`git checkout -b feature/nueva-caracteristica`).
-3. Realiza tus cambios y haz un commit (`git commit -m 'Añadir nueva característica'`).
-4. Envía un pull request.
+### 7. Acceder
+Abre tu navegador en: `http://127.0.0.1:5000`
 
-## Licencia
+## 🌐 Despliegue en PythonAnywhere
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+1. Subir archivos al servidor
+2. Configurar `.env` con variables de producción
+3. Configurar WSGI file apuntando a `app.py`
+4. Reload web app
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Para cambios importantes:
+
+1. Fork el proyecto
+2. Crear branch (`git checkout -b feature/nueva-feature`)
+3. Commit cambios (`git commit -m 'Agregar nueva feature'`)
+4. Push al branch (`git push origin feature/nueva-feature`)
+5. Abrir Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo Licencia MIT. Ver archivo [LICENSE](LICENSE) para más detalles.
+
+## 👤 Autor
+
+**n4nbush**
+- GitHub: [@n4nbush](https://github.com/n4nbush)
+
+---
+
+⭐ Si te resultó útil, dejá una estrella en el repo!
